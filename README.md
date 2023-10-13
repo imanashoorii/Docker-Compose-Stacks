@@ -1,6 +1,3 @@
-Awesome Docker Compose
----
-
 ## What is this?
 
 This is a collection of docker compose stacks for daily software development work.
