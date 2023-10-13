@@ -33,15 +33,16 @@ use `-d` to start compose in detach mode
 | Stack                            | Standalone | Cluster |
 |----------------------------------|------------|---------|
 | Apache Kafka                     | ✅          | ✅    |
-| Debezium - Postgres              | ✅          |        |
-| Debezium - MySQL                 | ✅          |        |
 | Jaeger                           | ✅          |        |
 | Postgres                         | ✅          | ✅    |
 | Prometheus + Grafana             | ✅          |        |
-| Prometheus Push Gateway          | ✅          |        |
+| Prometheus + Telegraf            | ✅          |        |
+| InfluxDB + Telegraf              | ✅          |        |
 | [ScyllaDB](./scylladb/Readme.md) | ✅          | ✅    |
 | SonarQube                        | ✅          |        |
 | MySQL                            | ✅          |        |
+| RabbitMQ                         | ✅          |        |
+| Redis                            | ✅          |        |
 | MongoDB      [WIP]               |              |       |
 
 ## How to contribute
