@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    hostname: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: your_root_username
+      MONGO_INITDB_ROOT_PASSWORD: your_root_password
+    volumes:
+      - mongodb_data:/data/db
+      - mongo_config:/data/configdb
+    command: mongod --auth
+    networks:
+      - mongodb
+
+volumes:
+  mongodb_data:
+  mongo_config:
+
+networks:
+  mongodb:
+    driver: bridge

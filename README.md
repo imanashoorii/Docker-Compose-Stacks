@@ -40,7 +40,7 @@ use `-d` to start compose in detach mode
 | MySQL                            | ✅          |        |
 | RabbitMQ                         | ✅          |        |
 | Redis                            | ✅          |        |
-| MongoDB      [WIP]               |              |       |
+| MongoDB                          | ✅          |       |
 
 ## How to contribute
 
