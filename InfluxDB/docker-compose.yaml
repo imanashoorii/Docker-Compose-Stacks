@@ -1,0 +1,39 @@
+version: '3.9'
+
+volumes:
+  influxdb_config: {}
+  influxdb_data: {}
+
+networks:
+  monitoring:
+    name: monitoring
+
+services:
+  influxdb:
+    hostname: influxdb
+    container_name: influxdb
+    restart: always
+    image: influxdb:2.7-alpine
+    environment:
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin
+      - DOCKER_INFLUXDB_INIT_ORG=influxdb
+      - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+    ports:
+      - 8086:8086
+    networks:
+      - monitoring
+    volumes:
+      - influxdb_config:/etc/influxdb2
+      - influxdb_data:/var/lib/influxdb2
+  telegraf:
+    hostname: telegraf
+    container_name: telegraf
+    image: telegraf:1.28-alpine
+    restart: always
+    ports:
+      - 8125:8125/udp
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      - monitoring
