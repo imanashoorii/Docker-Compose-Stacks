@@ -29,18 +29,20 @@ use `-d` to start compose in detach mode
 
 | Stack                            | Standalone | Cluster |
 |----------------------------------|------------|---------|
-| Apache Kafka                     | ✅          | ✅    |
-| Jaeger                           | ✅          |        |
-| Postgres                         | ✅          | ✅    |
+| Apache Kafka                     | ✅          | ✅      |
+| Jaeger                           | ✅          |         |
+| Postgres                         | ✅          | ✅      |
 | Prometheus + Grafana             | ✅          |        |
 | Prometheus + Telegraf            | ✅          |        |
 | InfluxDB + Telegraf              | ✅          |        |
-| [ScyllaDB](./scylladb/Readme.md) | ✅          | ✅    |
+| [ScyllaDB](./scylladb/Readme.md) | ✅          | ✅     |
 | SonarQube                        | ✅          |        |
 | MySQL                            | ✅          |        |
 | RabbitMQ                         | ✅          |        |
 | Redis                            | ✅          |        |
 | MongoDB                          | ✅          |       |
+| Graylog                          | ✅          |       |
+| Minio                            | ✅          |       |
 
 ## How to contribute
 
