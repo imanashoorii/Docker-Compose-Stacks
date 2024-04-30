@@ -1,64 +1,82 @@
-version: '3.9'
 services:
-  mongo:
-    hostname: mongo
-    container_name: mongodb_graylog
+  mongodb:
+    hostname: mongodb
+    container_name: mongodb
     image: mongo:5.0.13
     networks:
       - graylog
     volumes:
       - graylog-mongo-data:/data/db
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
-    hostname: elasticsearch
-    container_name: elasticsearch_graylog
-    environment:
-      - http.host=0.0.0.0
-      - transport.host=localhost
-      - network.host=0.0.0.0
-      - "ES_JAVA_OPTS=-Dlog4j2.formatMsgNoLookups=true -Xms512m -Xmx512m"
-    networks:
-      - graylog
-    volumes:
-    - graylog-es-data:/usr/share/elasticsearch/data
-  graylog:
-    image: graylog/graylog:5.0
-    hostname: graylog
-    container_name: graylog_graylog
-    environment:
-      - GRAYLOG_PASSWORD_SECRET=somepasswordpepper # CHANGE ME (must be at least 16 characters)!
-      # Password: admin
-      - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
-      - GRAYLOG_HTTP_EXTERNAL_URI=http://127.0.0.1:9000/
-    entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 -- /docker-entrypoint.sh
-    networks:
-      - graylog
-    restart: always
-    volumes:
-      - graylog-graylog-data:/usr/share/graylog/data
-    depends_on:
-      - mongo
-      - elasticsearch
-    ports:
-      # Graylog web interface and REST API
-      - 9000:9000
-      # Syslog TCP
-      - 1514:1514
-      # Syslog UDP
-      - 1514:1514/udp
-      # GELF TCP
-      - 12201:12201
-      # GELF UDP
-      - 12201:12201/udp
 
+  datanode:
+    image: graylog/graylog-datanode:5.2
+    hostname: datanode
+    container_name: datanode
+    environment:
+      GRAYLOG_DATANODE_NODE_ID_FILE: "/var/lib/graylog-datanode/node-id"
+      GRAYLOG_DATANODE_PASSWORD_SECRET: ${GRAYLOG_PASSWORD_SECRET}
+      GRAYLOG_DATANODE_ROOT_PASSWORD_SHA2: ${GRAYLOG_ROOT_PASSWORD_SHA2}
+      GRAYLOG_DATANODE_MONGODB_URI: "mongodb://mongodb:27017/graylog"
+    ulimits:
+      memlock:
+        hard: -1
+        soft: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "8999:8999/tcp"   # DataNode API
+      - "9200:9200/tcp"
+      - "9300:9300/tcp"
+    networks:
+      - graylog
+    volumes:
+      - graylog-datanode:/var/lib/graylog-datanode
+    restart: on-failure
+
+  graylog:
+    image: graylog/graylog:5.2
+    hostname: graylog
+    container_name: graylog
+    environment:
+      GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/data/node-id"
+      GRAYLOG_PASSWORD_SECRET: ${GRAYLOG_PASSWORD_SECRET}
+      GRAYLOG_ROOT_PASSWORD_SHA2: ${GRAYLOG_ROOT_PASSWORD_SHA2}
+      GRAYLOG_HTTP_BIND_ADDRESS: "0.0.0.0:9000"
+      GRAYLOG_HTTP_EXTERNAL_URI: "http://127.0.0.1:9000/"
+      GRAYLOG_MONGODB_URI: "mongodb://mongodb:27017/graylog"
+    entrypoint: "/usr/bin/tini --  /docker-entrypoint.sh"
+    networks:
+      - graylog
+    restart: on-failure
+    volumes:
+      - graylog-data:/usr/share/graylog/data
+      - graylog-journal:/usr/share/graylog/data/journal
+    depends_on:
+      mongodb:
+        condition: "service_started"
+    ports:
+      - "5044:5044/tcp"   # Beats
+      - "5140:5140/udp"   # Syslog
+      - "5140:5140/tcp"   # Syslog
+      - "5555:5555/tcp"   # RAW TCP
+      - "5555:5555/udp"   # RAW TCP
+      - "9000:9000/tcp"   # Server API
+      - "12201:12201/tcp" # GELF TCP
+      - "12201:12201/udp" # GELF UDP
+      - "13301:13301/tcp" # Forwarder data
+      - "13302:13302/tcp" # Forwarder config
 networks:
   graylog:
+    name: graylog
     driver: bridge
 
 volumes:
   graylog-mongo-data:
     name: graylog-mongo-data
-  graylog-es-data:
-    name: graylog-es-data
-  graylog-graylog-data:
-    name: graylog-graylog-data
+  graylog-datanode:
+    name: graylog-datanode
+  graylog-journal:
+    name: graylog-journal
+  graylog-data:
+    name: graylog-data
