@@ -1,0 +1,72 @@
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:16.11.2-ce.0
+    container_name: gitlab
+    restart: always
+    hostname: gitlab
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        # Let’s Encrypt is enabled by default if external_url is set with the HTTPS protocol and no other certificates are configured.
+        external_url 'https://git.example.com'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2022
+        gitlab_rails['time_zone'] = 'America/New_York'
+        gitlab_rails['smtp_enable'] = true
+        gitlab_rails['smtp_port'] = 587
+        gitlab_rails['smtp_user_name'] = "git@example.com"
+        gitlab_rails['smtp_password'] = "SMTP_PASSWORD"
+        gitlab_rails['smtp_domain'] = "mail.example.com"
+        gitlab_rails['gitlab_email_from'] = 'git@example.com'
+        gitlab_rails['gitlab_email_display_name'] = 'GitLab Administrator'
+        gitlab_rails['gitlab_email_reply_to'] = 'git@example.com'
+        gitlab_rails['smtp_address'] = "mail.example.com"
+        gitlab_rails['smtp_authentication'] = "login"
+        gitlab_rails['smtp_enable_starttls_auto'] = true
+    ports:
+      - '80:80'
+      - '443:443'
+      - '2022:22'
+    volumes:
+      - configs:/etc/gitlab
+      - logs:/var/log/gitlab
+      - data:/var/opt/gitlab
+    shm_size: '256m'
+    networks:
+      - gitlab
+
+  runner_1:
+    image: gitlab/gitlab-runner:latest
+    container_name: runner_1
+    hostname: runner_1
+    restart: always
+    depends_on:
+      - gitlab
+    volumes:
+      - backend_runner:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - gitlab
+
+  runner_2:
+    image: gitlab/gitlab-runner:latest
+    container_name: runner_2
+    hostname: runner_2
+    restart: always
+    depends_on:
+      - gitlab
+    volumes:
+      - frontend_runner:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - gitlab
+
+networks:
+  gitlab:
+    name: gitlab
+
+volumes:
+  configs:
+  logs:
+  data:
+  runner_1:
+  runner_2:
+

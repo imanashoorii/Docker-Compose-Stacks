@@ -44,6 +44,7 @@ use `-d` to start compose in detach mode
 | Graylog                          | ✅          |       |
 | Minio                            | ✅          |       |
 | Outline Wiki                     | ✅          |       |
+| Gitlab                           | ✅          |       |
 
 ## How to contribute
 
