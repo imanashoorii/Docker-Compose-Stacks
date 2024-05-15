@@ -1,0 +1,32 @@
+services:
+
+  https-portal:
+    image: steveltn/https-portal
+    hostname: https-portal
+    container_name: https-portal
+    env_file: ./docker.env
+    ports:
+      - '80:80'
+      - '443:443'
+    restart: always
+    volumes:
+      - https-portal-data:/var/lib/https-portal
+    healthcheck:
+      test: ["CMD", "service", "nginx", "status"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    environment:
+      DOMAINS: 'wiki.example.com -> http://outline:3000, storage.example.com -> http://storage:9000'
+      STAGE: 'production'
+      WEBSOCKET: 'true'
+    networks:
+      - outline
+
+volumes:
+  https-portal-data:
+
+networks:
+  outline:
+    name: outline
+    external: true

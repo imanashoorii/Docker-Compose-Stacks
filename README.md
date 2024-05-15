@@ -43,6 +43,7 @@ use `-d` to start compose in detach mode
 | MongoDB                          | ✅          |       |
 | Graylog                          | ✅          |       |
 | Minio                            | ✅          |       |
+| Outline Wiki                     | ✅          |       |
 
 ## How to contribute
 
