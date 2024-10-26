@@ -1,0 +1,32 @@
+services:
+  replica_db:
+    image: postgres:16-alpine
+    container_name: replica_db
+    hostname: replica_db
+    restart: always
+    user: postgres
+    healthcheck:
+      test: 'pg_isready -U primary_db_user --dbname=postgres'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      PGUSER: replica_user
+      PGPASSWORD: replica_password
+    volumes:
+      - postgres_replica_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    command: >
+      bash -c "
+      until pg_basebackup -h primary_db_host -D /var/lib/postgresql/data -Fp -Xs -P -R;
+      do
+        echo 'Waiting for primary to connect...';
+        sleep 5;
+      done
+      && echo 'Backup done, starting replica...'
+      && chmod 0700 /var/lib/postgresql/data
+      && postgres"
+volumes:
+  postgres_replica_data:
+    name: postgres_replica_data
