@@ -27,24 +27,25 @@ use `-d` to start compose in detach mode
 
 ## Stacks
 
-| Stack                            | Standalone | Cluster |
-|----------------------------------|------------|---------|
-| Apache Kafka                     | ✅          | ✅      |
-| Jaeger                           | ✅          |         |
-| Postgres                         | ✅          | ✅      |
-| Prometheus + Grafana             | ✅          |        |
-| Prometheus + Telegraf            | ✅          |        |
-| InfluxDB + Telegraf              | ✅          |        |
-| [ScyllaDB](./scylladb/Readme.md) | ✅          | ✅     |
-| SonarQube                        | ✅          |        |
-| MySQL                            | ✅          |        |
-| RabbitMQ                         | ✅          |        |
-| Redis                            | ✅          |        |
-| MongoDB                          | ✅          |       |
-| Graylog                          | ✅          |       |
-| Minio                            | ✅          |       |
-| Outline Wiki                     | ✅          |       |
-| Gitlab                           | ✅          |       |
+| Stack                              | Standalone | Cluster |
+|------------------------------------|------------|---------|
+| Apache Kafka                       | ✅          | ✅      |
+| Jaeger                             | ✅          |         |
+| Postgres                           | ✅          | ✅      |
+| Prometheus + Grafana               | ✅          |        |
+| Prometheus + Telegraf              | ✅          |        |
+| InfluxDB + Telegraf                | ✅          |        |
+| [ScyllaDB](./scylladb/Readme.md)   | ✅          | ✅     |
+| SonarQube                          | ✅          |        |
+| MySQL                              | ✅          |        |
+| RabbitMQ                           | ✅          |        |
+| Redis                              | ✅          |        |
+| MongoDB                            | ✅          |       |
+| Graylog                            | ✅          |       |
+| Minio                              | ✅          |       |
+| [Outline Wiki](./outline/README.md) | ✅          |       |
+| Gitlab                             | ✅          |       |
+| Metabase                           | ✅          |       |
 
 ## How to contribute
 
