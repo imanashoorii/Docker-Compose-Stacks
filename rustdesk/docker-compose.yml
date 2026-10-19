@@ -1,0 +1,68 @@
+services:
+
+  hbbs:
+    image: rustdesk/rustdesk-server:1
+    container_name: hbbs
+    command: hbbs -r rd.tools.bitops.ir:21117
+    volumes:
+      - ./data:/root
+    networks:
+      - web_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web_net"
+
+      # TCP 21115
+      - "traefik.tcp.routers.rustdesk-21115.entrypoints=rd-21115"
+      - "traefik.tcp.routers.rustdesk-21115.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.rustdesk-21115.service=rustdesk-21115"
+      - "traefik.tcp.services.rustdesk-21115.loadbalancer.server.port=21115"
+
+      # TCP 21116
+      - "traefik.tcp.routers.rustdesk-21116.entrypoints=rd-21116"
+      - "traefik.tcp.routers.rustdesk-21116.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.rustdesk-21116.service=rustdesk-21116"
+      - "traefik.tcp.services.rustdesk-21116.loadbalancer.server.port=21116"
+
+      # UDP 21116
+      - "traefik.udp.routers.rustdesk-21116.entrypoints=rd-21116-udp"
+      - "traefik.udp.routers.rustdesk-21116-udp.service=rustdesk-21116-udp"
+      - "traefik.udp.services.rustdesk-21116-udp.loadbalancer.server.port=21116"
+
+      # TCP 21118
+      - "traefik.tcp.routers.rustdesk-21118.entrypoints=rd-21118"
+      - "traefik.tcp.routers.rustdesk-21118.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.rustdesk-21118.service=rustdesk-21118"
+      - "traefik.tcp.services.rustdesk-21118.loadbalancer.server.port=21118"
+
+    restart: unless-stopped
+
+  hbbr:
+    image: rustdesk/rustdesk-server:1
+    container_name: hbbr
+    command: hbbr
+    volumes:
+      - ./data:/root
+    networks:
+      - web_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web_net"
+
+      # TCP 21117
+      - "traefik.tcp.routers.rustdesk-21117.entrypoints=rd-21117"
+      - "traefik.tcp.routers.rustdesk-21117.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.rustdesk-21117.service=rustdesk-21117"
+      - "traefik.tcp.services.rustdesk-21117.loadbalancer.server.port=21117"
+
+      # TCP 21119
+      - "traefik.tcp.routers.rustdesk-21119.entrypoints=rd-21119"
+      - "traefik.tcp.routers.rustdesk-21119.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.rustdesk-21119.service=rustdesk-21119"
+      - "traefik.tcp.services.rustdesk-21119.loadbalancer.server.port=21119"
+
+    restart: unless-stopped
+
+networks:
+  web_net:
+    external: true
