@@ -46,6 +46,7 @@ use `-d` to start compose in detach mode
 | [Outline Wiki](./outline/README.md) | ✅          |       |
 | Gitlab                             | ✅          |       |
 | Metabase                           | ✅          |       |
+| RUSTDESK                           | ✅          |       |
 
 ## How to contribute
 
